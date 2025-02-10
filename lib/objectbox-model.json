@@ -1,0 +1,79 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "2:758462584050309859",
+      "lastPropertyId": "6:2995385554982839474",
+      "name": "Transaction",
+      "properties": [
+        {
+          "id": "1:3116506026390258885",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5941634700134193359",
+          "name": "personId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "1:915571265968141490",
+          "relationTarget": "Person"
+        },
+        {
+          "id": "3:1231760593242716243",
+          "name": "amount",
+          "type": 6
+        },
+        {
+          "id": "4:1350276023331566307",
+          "name": "notes",
+          "type": 9
+        },
+        {
+          "id": "5:5985625380716539470",
+          "name": "editing",
+          "type": 1
+        },
+        {
+          "id": "6:2995385554982839474",
+          "name": "created",
+          "type": 10
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "4:7257489728463747503",
+  "lastIndexId": "1:915571265968141490",
+  "lastRelationId": "1:4647358284603058266",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [
+    2498986977704321354,
+    4773783202881771976,
+    7257489728463747503
+  ],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [
+    7173020870094419899,
+    7680098435654789618,
+    1083896328088967552,
+    5712495167925337021,
+    693254613993596543,
+    562001110834652442,
+    6347496845778357087,
+    5255412751979818657,
+    2631424023131060460,
+    4933500099249674564,
+    1315357538304036240,
+    4190388579555751707
+  ],
+  "retiredRelationUids": [
+    4647358284603058266
+  ],
+  "version": 1
+}
