@@ -1,4 +1,4 @@
-# project_money
+# money
 
 A new Flutter project.
 

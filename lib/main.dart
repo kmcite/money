@@ -1,157 +1,76 @@
-import 'package:forui/forui.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+export 'package:forui/forui.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:money/domain/repositories/dark_repository.dart';
+import 'package:money/domain/repositories/index_repository.dart';
+import 'package:money/domain/repositories/persons_repository.dart';
+import 'package:money/domain/repositories/transactions_repository.dart';
+import 'package:money/features/dashboard/application_shell.dart';
 
 import 'main.dart';
+import 'objectbox.g.dart' hide Box;
+export 'utils/navigator.dart';
 
-export '../dashboard/dashboard.dart';
-export 'dart:convert';
-export 'dart:developer' hide Flow;
-export 'dart:io';
-export 'package:colornames/colornames.dart';
-export 'package:file_picker/file_picker.dart';
-export 'package:flutter/foundation.dart';
-export 'package:freezed_annotation/freezed_annotation.dart';
-export 'package:google_fonts/google_fonts.dart';
-export 'package:manager/manager.dart';
-export 'package:money/persons/person.dart';
-export 'package:money/persons/person_page.dart';
-export 'package:money/persons/persons_page.dart';
-export 'package:money/settings/settings.dart';
-export 'package:money/settings/settings_page.dart';
-export 'package:money/transactions/transaction.dart';
-export 'package:money/transactions/transaction_page.dart';
-export 'package:money/transactions/transactions.dart';
-export 'package:money/transactions/transactions_page.dart';
-export 'package:states_rebuilder/states_rebuilder.dart';
-export 'package:uuid/uuid.dart';
+export 'package:flutter/material.dart';
+
+export 'package:money/utils/architecture.dart';
 
 void main() async {
-  try {
-    FlutterNativeSplash.preserve(
-      widgetsBinding: WidgetsFlutterBinding.ensureInitialized(),
-    );
-    // final appInfo = await PackageInfo.fromPlatform();
-    await RM.storageInitializer(HiveStorage());
-    // store = await openStore(
-    //   directory: join(
-    //     (await getApplicationDocumentsDirectory()).path,
-    //     appInfo.appName,
-    //   ),
-    // );
-    // GoogleFonts.config.allowRuntimeFetching = false;
+  FlutterNativeSplash.preserve(
+    widgetsBinding: WidgetsFlutterBinding.ensureInitialized(),
+  );
 
-    runApp(App());
-  } catch (e) {
-    runApp(
-      MaterialApp(
-        home: e.text(),
-      ),
-    );
-  }
+  /// SERVICES
+
+  // INJECTING STORAGE
+  service<Store>(await openStore());
+
+  // hive
+  await Hive.initFlutter();
+  // hive box
+  service<Box>(await Hive.openBox('money'));
+
+  /// REPOS
+  repository(DarkRepository());
+  repository(PersonsRepository());
+  repository(TransactionsRepository());
+  repository(IndexRepository());
+
+  runApp(App());
 }
 
-class App extends UI {
+class App extends UI<AppBloc> {
   const App({super.key});
 
   @override
-  void didMountWidget(BuildContext context) {
-    super.didMountWidget(context);
-    FlutterNativeSplash.remove();
+  Widget build(context, controller) {
+    return MaterialApp(
+      navigatorKey: navigator.navigatorKey,
+      debugShowCheckedModeBanner: false,
+      home: ApplicationShell(),
+      themeMode: controller.dark ? ThemeMode.dark : ThemeMode.light,
+      theme: ThemeData(),
+      darkTheme: ThemeData.dark(),
+      builder: (context, child) {
+        return FTheme(
+          data: controller.dark ? FThemes.yellow.dark : FThemes.yellow.light,
+          child: child!,
+        );
+      },
+    );
   }
 
   @override
-  Widget build(context) {
-    return MaterialApp(
-        navigatorKey: navigator.navigatorKey,
-        debugShowCheckedModeBanner: false,
-        home: Application(),
-        themeMode: themeMode(),
-        builder: (context, child) {
-          return FTheme(
-            data: FThemes.yellow.light,
-            child: child!,
-          );
-        }
-        // theme: FlexThemeData.light(
-        //   fontFamily: fontFamily(font()),
-        //   colorScheme: ColorScheme.fromSwatch(
-        //     primarySwatch: materialColor(),
-        //   ),
-        //   useMaterial3: useMaterial3(),
-        //   appBarStyle: FlexAppBarStyle.primary,
-        //   subThemesData: FlexSubThemesData(
-        //     defaultRadius: borderRadius(),
-        //     inputDecoratorRadius: borderRadius(),
-        //     fabRadius: borderRadius(),
-        //     elevatedButtonRadius: borderRadius(),
-        //     textButtonRadius: borderRadius(),
-        //     outlinedButtonRadius: borderRadius(),
-        //     toggleButtonsRadius: borderRadius(),
-        //     cardRadius: borderRadius(),
-        //     popupMenuRadius: borderRadius(),
-        //     dialogRadius: borderRadius(),
-        //     bottomSheetRadius: borderRadius(),
-        //     interactionEffects: true,
-        //     blendOnColors: true,
-        //   ),
-        //   lightIsWhite: true,
-        //   visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        // ),
-        // darkTheme: FlexThemeData.dark(
-        //   fontFamily: fontFamily(font()),
-        //   colorScheme: ColorScheme.fromSwatch(
-        //     primarySwatch: materialColor(),
-        //     brightness: Brightness.dark,
-        //   ),
-        //   // useMaterial3: useMaterial3(),
-        //   // appBarStyle: FlexAppBarStyle.primary,
-        //   // subThemesData: FlexSubThemesData(
-        //   //   defaultRadius: borderRadius(),
-        //   //   inputDecoratorRadius: borderRadius(),
-        //   //   fabRadius: borderRadius(),
-        //   //   elevatedButtonRadius: borderRadius(),
-        //   //   textButtonRadius: borderRadius(),
-        //   //   outlinedButtonRadius: borderRadius(),
-        //   //   toggleButtonsRadius: borderRadius(),
-        //   //   cardRadius: borderRadius(),
-        //   //   popupMenuRadius: borderRadius(),
-        //   //   dialogRadius: borderRadius(),
-        //   //   bottomSheetRadius: borderRadius(),
-        //   //   interactionEffects: true,
-        //   //   blendOnColors: true,
-        //   // ),
-        //   darkIsTrueBlack: true,
-        //   // visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        // ),
-        );
+  AppBloc create() => AppBloc();
+}
+
+class AppBloc extends Controller {
+  late var darkRepository = depend<DarkRepository>();
+  bool get dark => darkRepository.dark;
+
+  @override
+  void initState() {
+    super.initState();
+    FlutterNativeSplash.remove();
   }
 }
-
-List<String> get fonts {
-  return [
-    "Default",
-    "Azeret Mono",
-    "Comfortaa",
-    "DM Mono",
-    "Dosis",
-    "Fira Sans",
-    "IBM Plex Mono",
-    "Josefin Sans",
-    "Montserrat",
-    "Space Mono",
-    "Ubuntu",
-  ];
-}
-
-String? fontFamily(String font) {
-  try {
-    if (font == 'Default') {
-      return null;
-    }
-    return GoogleFonts.getFont(font).fontFamily;
-  } catch (e) {
-    log(e.toString());
-    return null;
-  }
-}
-
-final navigator = RM.navigate;
