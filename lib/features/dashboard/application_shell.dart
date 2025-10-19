@@ -6,7 +6,7 @@ import 'package:money/main.dart';
 import '../settings/settings_page.dart';
 import 'dashboard.dart';
 
-class ApplicationShellBloc extends Controller {
+class ApplicationShellBloc extends Bloc {
   /// SOURCES
   late final indexRepository = depend<IndexRepository>();
 
@@ -28,7 +28,7 @@ class ApplicationShellBloc extends Controller {
 }
 
 /// UI LAYER
-class ApplicationShell extends UI<ApplicationShellBloc> {
+class ApplicationShell extends Feature<ApplicationShellBloc> {
   const ApplicationShell({super.key});
 
   @override
@@ -37,25 +37,25 @@ class ApplicationShell extends UI<ApplicationShellBloc> {
   @override
   Widget build(context, controller) {
     return Scaffold(
-      bottomNavigationBar: FBottomNavigationBar(
-        index: controller.index,
-        onChange: controller.setIndex,
-        children: [
-          FBottomNavigationBarItem(
-            icon: Icon(FIcons.house),
-            label: Text('Dashboard'),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: controller.index,
+        onDestinationSelected: controller.setIndex,
+        destinations: [
+          NavigationDestination(
+            icon: Icon(Icons.home),
+            label: 'Dashboard',
           ),
-          FBottomNavigationBarItem(
-            icon: Icon(FIcons.group),
-            label: Text('Persons'),
+          NavigationDestination(
+            icon: Icon(Icons.group),
+            label: 'Persons',
           ),
-          FBottomNavigationBarItem(
-            icon: Icon(FIcons.dollarSign),
-            label: Text('Transactions'),
+          NavigationDestination(
+            icon: Icon(Icons.attach_money),
+            label: 'Transactions',
           ),
-          FBottomNavigationBarItem(
-            icon: Icon(FIcons.settings),
-            label: Text('Settings'),
+          NavigationDestination(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
           ),
         ],
       ),

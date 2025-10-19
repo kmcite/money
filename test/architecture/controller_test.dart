@@ -96,7 +96,7 @@ void main() {
 
 /// MOCKS
 
-class MockController extends Controller {
+class MockController extends Bloc {
   late MockRepository mockRepository = depend();
   bool get dark => mockRepository.dark;
 }
@@ -105,7 +105,7 @@ class MockRepository extends Repository {
   bool dark = false;
 }
 
-class MockFeature extends UI<MockController> {
+class MockFeature extends Feature<MockController> {
   const MockFeature({super.key});
 
   @override

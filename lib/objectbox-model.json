@@ -24,7 +24,7 @@
     },
     {
       "id": "2:8293366740837241128",
-      "lastPropertyId": "4:3414006024218173339",
+      "lastPropertyId": "6:687115844222007862",
       "name": "Transaction",
       "properties": [
         {
@@ -50,6 +50,16 @@
           "type": 11,
           "flags": 520,
           "relationTarget": "Person"
+        },
+        {
+          "id": "5:7523321317004397021",
+          "name": "createdAt",
+          "type": 6
+        },
+        {
+          "id": "6:687115844222007862",
+          "name": "date",
+          "type": 10
         }
       ],
       "relations": []

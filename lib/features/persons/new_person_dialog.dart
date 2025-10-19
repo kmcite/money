@@ -1,9 +1,10 @@
 import 'package:money/domain/repositories/persons_repository.dart';
 import 'package:money/main.dart';
+import 'package:money/utils/navigator.dart';
 
 import '../../domain/models/person.dart';
 
-class NewPersonBloc extends Controller {
+class NewPersonBloc extends Bloc {
   /// SOURCES
   late final personsRepository = depend<PersonsRepository>();
 
@@ -33,7 +34,7 @@ class NewPersonBloc extends Controller {
   }
 }
 
-class NewPersonDialog extends UI<NewPersonBloc> {
+class NewPersonDialog extends Feature<NewPersonBloc> {
   const NewPersonDialog({super.key});
 
   @override
@@ -41,30 +42,51 @@ class NewPersonDialog extends UI<NewPersonBloc> {
 
   @override
   Widget build(context, NewPersonBloc controller) {
-    return FDialog(
-      title: Text('New Person'),
-      body: Column(
+    return AlertDialog(
+      title: Text('Add New Person'),
+      content: Column(
         mainAxisSize: MainAxisSize.min,
+        spacing: 16,
         children: [
-          FTextField(
-            label: Text('Name'),
-            initialText: controller.person?.name,
-            onChange: controller.onNameChanged,
+          TextField(
+            decoration: InputDecoration(
+              labelText: 'Person Name',
+              border: OutlineInputBorder(),
+            ),
+            onChanged: controller.onNameChanged,
           ),
-          // .pad(),
+          if (controller.person?.name.isNotEmpty == true)
+            Container(
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.green.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.green.withOpacity(0.3)),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.check, color: Colors.green, size: 20),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Ready to add "${controller.person?.name}"',
+                      style: TextStyle(color: Colors.green[700]),
+                    ),
+                  ),
+                ],
+              ),
+            ),
         ],
       ),
-      direction: Axis.horizontal,
       actions: [
-        FButton(
-          onPress:
-              controller.person?.name.isEmpty ?? true ? null : controller.save,
-          child: Text('Save'),
-        ),
-        FButton(
-          style: FButtonStyle.destructive(),
-          onPress: controller.cancel,
+        TextButton(
+          onPressed: controller.cancel,
           child: Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed:
+              controller.person?.name.isEmpty ?? true ? null : controller.save,
+          child: Text('Add Person'),
         ),
       ],
     );

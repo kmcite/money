@@ -45,7 +45,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(2, 8293366740837241128),
     name: 'Transaction',
-    lastPropertyId: const obx_int.IdUid(4, 3414006024218173339),
+    lastPropertyId: const obx_int.IdUid(6, 687115844222007862),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -73,6 +73,18 @@ final _entities = <obx_int.ModelEntity>[
         flags: 520,
         indexId: const obx_int.IdUid(1, 4797485126035178209),
         relationTarget: 'Person',
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(5, 7523321317004397021),
+        name: 'createdAt',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(6, 687115844222007862),
+        name: 'date',
+        type: 10,
+        flags: 0,
       ),
     ],
     relations: <obx_int.ModelRelation>[],
@@ -171,11 +183,13 @@ obx_int.ModelDefinition getObjectBoxModel() {
       },
       objectToFB: (Transaction object, fb.Builder fbb) {
         final notesOffset = fbb.writeString(object.notes);
-        fbb.startTable(5);
+        fbb.startTable(7);
         fbb.addInt64(0, object.id);
         fbb.addInt64(1, object.amount);
         fbb.addOffset(2, notesOffset);
         fbb.addInt64(3, object.person.targetId);
+        fbb.addInt64(4, object.createdAt);
+        fbb.addInt64(5, object.date.millisecondsSinceEpoch);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -188,7 +202,16 @@ obx_int.ModelDefinition getObjectBoxModel() {
           ..amount = const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0)
           ..notes = const fb.StringReader(
             asciiOptimization: true,
-          ).vTableGet(buffer, rootOffset, 8, '');
+          ).vTableGet(buffer, rootOffset, 8, '')
+          ..createdAt = const fb.Int64Reader().vTableGet(
+            buffer,
+            rootOffset,
+            12,
+            0,
+          )
+          ..date = DateTime.fromMillisecondsSinceEpoch(
+            const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0),
+          );
         object.person.targetId = const fb.Int64Reader().vTableGet(
           buffer,
           rootOffset,
@@ -237,5 +260,15 @@ class Transaction_ {
   /// See [Transaction.person].
   static final person = obx.QueryRelationToOne<Transaction, Person>(
     _entities[1].properties[3],
+  );
+
+  /// See [Transaction.createdAt].
+  static final createdAt = obx.QueryIntegerProperty<Transaction>(
+    _entities[1].properties[4],
+  );
+
+  /// See [Transaction.date].
+  static final date = obx.QueryDateProperty<Transaction>(
+    _entities[1].properties[5],
   );
 }

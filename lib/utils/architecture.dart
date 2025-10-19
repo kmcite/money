@@ -18,15 +18,12 @@ final services = <Type, dynamic>{};
 
 /// REPOSITORY -> inject repositories
 void repository<T extends Repository>(T instance) {
-  repositories[T] = instance;
-  logInfo('Registered Repository: $T');
-  // return instance;
-  // final repo = repositories[T];
-  // if (repo == null) {
-  //   throw Exception('No repository registered for type $T');
-  // }
-  // logInfo('Using Repository: $T');
-  // return repo as T;
+  if (repositories.containsKey(T)) {
+    logInfo('Already Registered Repository: $T');
+  } else {
+    repositories[T] = instance;
+    logInfo('Registered Repository: $T');
+  }
 }
 
 /// SERVEICE -> inject services
@@ -50,9 +47,9 @@ abstract class Repository<T> extends ChangeNotifier {
 }
 
 /// -----------------------------------------------------------
-/// CONTROLLER
+/// BLOC
 /// -----------------------------------------------------------
-abstract class Controller extends ChangeNotifier {
+abstract class Bloc extends ChangeNotifier {
   final _disposers = <void Function()>[];
   bool disposed = false;
   bool initialized = false;
@@ -91,16 +88,16 @@ abstract class Controller extends ChangeNotifier {
 /// -----------------------------------------------------------
 /// UI FEATURE
 /// -----------------------------------------------------------
-abstract class UI<T extends Controller> extends StatefulWidget {
-  const UI({super.key});
+abstract class Feature<T extends Bloc> extends StatefulWidget {
+  const Feature({super.key});
   T create();
   Widget build(BuildContext context, T controller);
 
   @override
-  State<StatefulWidget> createState() => _UIState<T>();
+  State<StatefulWidget> createState() => _FeatureState<T>();
 }
 
-class _UIState<T extends Controller> extends State<UI<T>> {
+class _FeatureState<T extends Bloc> extends State<Feature<T>> {
   late final T controller = widget.create()
     ..initState()
     ..addListener(_listener);
