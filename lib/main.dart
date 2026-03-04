@@ -1,117 +1,44 @@
+export 'package:flutter/material.dart' hide RefreshCallback;
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:money/domain/repositories/dark_repository.dart';
-import 'package:money/domain/repositories/index_repository.dart';
-import 'package:money/domain/repositories/persons_repository.dart';
-import 'package:money/domain/repositories/transactions_repository.dart';
-import 'package:money/features/dashboard/application_shell.dart';
-import 'package:money/utils/navigator.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-
+import 'package:money/settings/dark.dart';
+import 'package:money/db/objects.dart';
+import 'package:money/dashboard/application_shell.dart';
+import 'package:money/db/hive.dart';
+export 'package:signals/signals.dart';
+export 'package:money/utils/ui.dart';
+export 'package:money/navigation/navigator.dart';
 import 'main.dart';
-import 'objectbox.g.dart' hide Box;
-
-export 'package:flutter/material.dart';
-export 'package:money/utils/architecture.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(
-    widgetsBinding: WidgetsFlutterBinding.ensureInitialized(),
+    widgetsBinding: WidgetsBinding.instance,
   );
+  SignalsObserver.instance = null;
+  await hiveStore.ensureReady();
+  await objects.ensureReady();
+  await ensureDark();
 
-  final appInfo = await PackageInfo.fromPlatform();
-  final path = await getApplicationDocumentsDirectory();
-
-  service<Store>(
-    await openStore(directory: join(path.path, appInfo.appName)),
-  );
-
-  // hive
-  await Hive.initFlutter(appInfo.appName);
-  // hive box
-  service<Box>(await Hive.openBox(appInfo.appName));
-
-  /// REPOS
-  repository(DarkRepository());
-  repository(PersonsRepository());
-  repository(TransactionsRepository());
-  repository(IndexRepository());
-
-  runApp(App());
+  runApp(MoneyApp());
 }
 
-class App extends Feature<AppBloc> {
-  const App({super.key});
+class MoneyApp extends UI {
+  const MoneyApp({super.key});
 
   @override
-  Widget build(context, controller) {
-    return MaterialApp(
-      navigatorKey: navigator.navigatorKey,
-      debugShowCheckedModeBanner: false,
-      home: ApplicationShell(),
-      themeMode: controller.dark ? ThemeMode.dark : ThemeMode.light,
-      theme: ThemeData.light(
-        // colorScheme: ColorScheme.fromSeed(
-        //   seedColor: Colors.blue,
-        //   brightness: Brightness.light,
-        // ),
-        useMaterial3: true,
-        // appBarTheme: AppBarTheme(
-        //   backgroundColor: Colors.blue,
-        //   foregroundColor: Colors.white,
-        // ),
-        // elevatedButtonTheme: ElevatedButtonThemeData(
-        //   style: ElevatedButton.styleFrom(
-        //     backgroundColor: Colors.blue,
-        //     foregroundColor: Colors.white,
-        //   ),
-        // ),
-        // outlinedButtonTheme: OutlinedButtonThemeData(
-        //   style: OutlinedButton.styleFrom(
-        //     foregroundColor: Colors.blue,
-        //     side: BorderSide(color: Colors.blue),
-        //   ),
-        // ),
-      ),
-      darkTheme: ThemeData.dark(
-        // colorScheme: ColorScheme.fromSeed(
-        //   seedColor: Colors.blue,
-        //   brightness: Brightness.dark,
-        // ),
-        useMaterial3: true,
-        // appBarTheme: AppBarTheme(
-        //   backgroundColor: Color(0xFF1A1A1A),
-        //   foregroundColor: Colors.white,
-        // ),
-        // elevatedButtonTheme: ElevatedButtonThemeData(
-        //   style: ElevatedButton.styleFrom(
-        //     backgroundColor: Colors.blue,
-        //     foregroundColor: Colors.white,
-        //   ),
-        // ),
-        // outlinedButtonTheme: OutlinedButtonThemeData(
-        //   style: OutlinedButton.styleFrom(
-        //     foregroundColor: Colors.blue,
-        //     side: BorderSide(color: Colors.blue),
-        //   ),
-        // ),
-      ),
-    );
+  void init(BuildContext context) {
+    FlutterNativeSplash.remove();
   }
 
   @override
-  AppBloc create() => AppBloc();
-}
-
-class AppBloc extends Bloc {
-  late var darkRepository = depend<DarkRepository>();
-  bool get dark => darkRepository.dark;
-
-  @override
-  void initState() {
-    super.initState();
-    FlutterNativeSplash.remove();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      navigatorKey: navigatorKey,
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: darkSignal() ? ThemeMode.dark : ThemeMode.light,
+      home: ApplicationShell(),
+    );
   }
 }

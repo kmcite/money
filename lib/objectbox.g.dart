@@ -14,76 +14,45 @@ import 'package:objectbox/internal.dart'
 import 'package:objectbox/objectbox.dart' as obx;
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
-import 'domain/models/person.dart';
-import 'domain/models/transaction.dart';
+import 'expenses/expense_model.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
 
 final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
-    id: const obx_int.IdUid(1, 8526317472726263789),
-    name: 'Person',
-    lastPropertyId: const obx_int.IdUid(2, 3948883220458621421),
+    id: const obx_int.IdUid(4, 8694174257024859892),
+    name: 'Expense',
+    lastPropertyId: const obx_int.IdUid(11, 3949942212076874165),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
-        id: const obx_int.IdUid(1, 4776833521126459171),
+        id: const obx_int.IdUid(1, 6828260155093473401),
         name: 'id',
         type: 6,
         flags: 1,
       ),
       obx_int.ModelProperty(
-        id: const obx_int.IdUid(2, 3948883220458621421),
-        name: 'name',
-        type: 9,
-        flags: 0,
-      ),
-    ],
-    relations: <obx_int.ModelRelation>[],
-    backlinks: <obx_int.ModelBacklink>[],
-  ),
-  obx_int.ModelEntity(
-    id: const obx_int.IdUid(2, 8293366740837241128),
-    name: 'Transaction',
-    lastPropertyId: const obx_int.IdUid(6, 687115844222007862),
-    flags: 0,
-    properties: <obx_int.ModelProperty>[
-      obx_int.ModelProperty(
-        id: const obx_int.IdUid(1, 5714188052595103927),
-        name: 'id',
-        type: 6,
-        flags: 1,
-      ),
-      obx_int.ModelProperty(
-        id: const obx_int.IdUid(2, 1010344018086141909),
-        name: 'amount',
-        type: 6,
-        flags: 0,
-      ),
-      obx_int.ModelProperty(
-        id: const obx_int.IdUid(3, 1327634009688833588),
-        name: 'notes',
+        id: const obx_int.IdUid(3, 3725361405003131430),
+        name: 'note',
         type: 9,
         flags: 0,
       ),
       obx_int.ModelProperty(
-        id: const obx_int.IdUid(4, 3414006024218173339),
-        name: 'personId',
-        type: 11,
-        flags: 520,
-        indexId: const obx_int.IdUid(1, 4797485126035178209),
-        relationTarget: 'Person',
-      ),
-      obx_int.ModelProperty(
-        id: const obx_int.IdUid(5, 7523321317004397021),
-        name: 'createdAt',
-        type: 6,
-        flags: 0,
-      ),
-      obx_int.ModelProperty(
-        id: const obx_int.IdUid(6, 687115844222007862),
+        id: const obx_int.IdUid(4, 7530753519007405932),
         name: 'date',
         type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(10, 2709924213008104471),
+        name: 'schemaVersion',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(11, 3949942212076874165),
+        name: 'money',
+        type: 6,
         flags: 0,
       ),
     ],
@@ -129,14 +98,44 @@ Future<obx.Store> openStore({
 /// [obx.Store.new].
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
+    // If this version is not found, it means that this file was generated
+    // with an older version of the ObjectBox Dart generator.
+    // Please regenerate this file with the current generator version.
+    // Typically, this is done with `dart run build_runner build`.
+    generatorVersion: obx_int.GeneratorVersion.v2025_12_16,
     entities: _entities,
-    lastEntityId: const obx_int.IdUid(2, 8293366740837241128),
+    lastEntityId: const obx_int.IdUid(4, 8694174257024859892),
     lastIndexId: const obx_int.IdUid(1, 4797485126035178209),
     lastRelationId: const obx_int.IdUid(0, 0),
     lastSequenceId: const obx_int.IdUid(0, 0),
-    retiredEntityUids: const [],
+    retiredEntityUids: const [
+      8526317472726263789,
+      8293366740837241128,
+      4038058507507609255,
+    ],
     retiredIndexUids: const [],
-    retiredPropertyUids: const [],
+    retiredPropertyUids: const [
+      4776833521126459171,
+      3948883220458621421,
+      5714188052595103927,
+      1010344018086141909,
+      1327634009688833588,
+      3414006024218173339,
+      7523321317004397021,
+      687115844222007862,
+      9178105703090153528,
+      5217994620048866311,
+      892546092346003791,
+      4715777236749734410,
+      5469530778652803120,
+      7365158824009652158,
+      4384838249052737865,
+      7198587605743826052,
+      5998621694080196278,
+      3513537160816694553,
+      1030027131171780880,
+      3985531746700708375,
+    ],
     retiredRelationUids: const [],
     modelVersion: 5,
     modelVersionParserMinimum: 5,
@@ -144,52 +143,22 @@ obx_int.ModelDefinition getObjectBoxModel() {
   );
 
   final bindings = <Type, obx_int.EntityDefinition>{
-    Person: obx_int.EntityDefinition<Person>(
+    Expense: obx_int.EntityDefinition<Expense>(
       model: _entities[0],
-      toOneRelations: (Person object) => [],
-      toManyRelations: (Person object) => {},
-      getId: (Person object) => object.id,
-      setId: (Person object, int id) {
+      toOneRelations: (Expense object) => [],
+      toManyRelations: (Expense object) => {},
+      getId: (Expense object) => object.id,
+      setId: (Expense object, int id) {
         object.id = id;
       },
-      objectToFB: (Person object, fb.Builder fbb) {
-        final nameOffset = fbb.writeString(object.name);
-        fbb.startTable(3);
-        fbb.addInt64(0, object.id ?? 0);
-        fbb.addOffset(1, nameOffset);
-        fbb.finish(fbb.endTable());
-        return object.id ?? 0;
-      },
-      objectFromFB: (obx.Store store, ByteData fbData) {
-        final buffer = fb.BufferContext(fbData);
-        final rootOffset = buffer.derefObject(0);
-
-        final object = Person()
-          ..id = const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 4)
-          ..name = const fb.StringReader(
-            asciiOptimization: true,
-          ).vTableGet(buffer, rootOffset, 6, '');
-
-        return object;
-      },
-    ),
-    Transaction: obx_int.EntityDefinition<Transaction>(
-      model: _entities[1],
-      toOneRelations: (Transaction object) => [object.person],
-      toManyRelations: (Transaction object) => {},
-      getId: (Transaction object) => object.id,
-      setId: (Transaction object, int id) {
-        object.id = id;
-      },
-      objectToFB: (Transaction object, fb.Builder fbb) {
-        final notesOffset = fbb.writeString(object.notes);
-        fbb.startTable(7);
+      objectToFB: (Expense object, fb.Builder fbb) {
+        final noteOffset = fbb.writeString(object.note);
+        fbb.startTable(12);
         fbb.addInt64(0, object.id);
-        fbb.addInt64(1, object.amount);
-        fbb.addOffset(2, notesOffset);
-        fbb.addInt64(3, object.person.targetId);
-        fbb.addInt64(4, object.createdAt);
-        fbb.addInt64(5, object.date.millisecondsSinceEpoch);
+        fbb.addOffset(2, noteOffset);
+        fbb.addInt64(3, object.date.millisecondsSinceEpoch);
+        fbb.addInt64(9, object.schemaVersion);
+        fbb.addInt64(10, object.money);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -197,28 +166,22 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final buffer = fb.BufferContext(fbData);
         final rootOffset = buffer.derefObject(0);
 
-        final object = Transaction()
+        final object = Expense()
           ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
-          ..amount = const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0)
-          ..notes = const fb.StringReader(
+          ..note = const fb.StringReader(
             asciiOptimization: true,
           ).vTableGet(buffer, rootOffset, 8, '')
-          ..createdAt = const fb.Int64Reader().vTableGet(
+          ..date = DateTime.fromMillisecondsSinceEpoch(
+            const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0),
+          )
+          ..schemaVersion = const fb.Int64Reader().vTableGet(
             buffer,
             rootOffset,
-            12,
+            22,
             0,
           )
-          ..date = DateTime.fromMillisecondsSinceEpoch(
-            const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0),
-          );
-        object.person.targetId = const fb.Int64Reader().vTableGet(
-          buffer,
-          rootOffset,
-          10,
-          0,
-        );
-        object.person.attach(store);
+          ..money = const fb.Int64Reader().vTableGet(buffer, rootOffset, 24, 0);
+
         return object;
       },
     ),
@@ -227,48 +190,30 @@ obx_int.ModelDefinition getObjectBoxModel() {
   return obx_int.ModelDefinition(model, bindings);
 }
 
-/// [Person] entity fields to define ObjectBox queries.
-class Person_ {
-  /// See [Person.id].
-  static final id = obx.QueryIntegerProperty<Person>(
+/// [Expense] entity fields to define ObjectBox queries.
+class Expense_ {
+  /// See [Expense.id].
+  static final id = obx.QueryIntegerProperty<Expense>(
     _entities[0].properties[0],
   );
 
-  /// See [Person.name].
-  static final name = obx.QueryStringProperty<Person>(
+  /// See [Expense.note].
+  static final note = obx.QueryStringProperty<Expense>(
     _entities[0].properties[1],
   );
-}
 
-/// [Transaction] entity fields to define ObjectBox queries.
-class Transaction_ {
-  /// See [Transaction.id].
-  static final id = obx.QueryIntegerProperty<Transaction>(
-    _entities[1].properties[0],
+  /// See [Expense.date].
+  static final date = obx.QueryDateProperty<Expense>(
+    _entities[0].properties[2],
   );
 
-  /// See [Transaction.amount].
-  static final amount = obx.QueryIntegerProperty<Transaction>(
-    _entities[1].properties[1],
+  /// See [Expense.schemaVersion].
+  static final schemaVersion = obx.QueryIntegerProperty<Expense>(
+    _entities[0].properties[3],
   );
 
-  /// See [Transaction.notes].
-  static final notes = obx.QueryStringProperty<Transaction>(
-    _entities[1].properties[2],
-  );
-
-  /// See [Transaction.person].
-  static final person = obx.QueryRelationToOne<Transaction, Person>(
-    _entities[1].properties[3],
-  );
-
-  /// See [Transaction.createdAt].
-  static final createdAt = obx.QueryIntegerProperty<Transaction>(
-    _entities[1].properties[4],
-  );
-
-  /// See [Transaction.date].
-  static final date = obx.QueryDateProperty<Transaction>(
-    _entities[1].properties[5],
+  /// See [Expense.money].
+  static final money = obx.QueryIntegerProperty<Expense>(
+    _entities[0].properties[4],
   );
 }
