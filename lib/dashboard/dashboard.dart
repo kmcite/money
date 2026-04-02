@@ -66,7 +66,7 @@ class DashboardPage extends UI {
             ),
             const SizedBox(height: 16),
             Text(
-              '₹${allTotal.toStringAsFixed(0)}',
+              '\$${allTotal.toStringAsFixed(0)}',
               style: theme.textTheme.titleLarge?.copyWith(
                 fontSize: 28,
                 fontWeight: FontWeight.w600,
@@ -96,7 +96,7 @@ class DashboardPage extends UI {
                       Text('Monthly'),
                       SizedBox(height: 4),
                       Text(
-                        '₹${monthlyTotal.toStringAsFixed(0)}',
+                        '\$${monthlyTotal.toStringAsFixed(0)}',
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
@@ -117,7 +117,7 @@ class DashboardPage extends UI {
                       Text('Today'),
                       SizedBox(height: 4),
                       Text(
-                        '₹${todayTotal.toStringAsFixed(0)}',
+                        '\$${todayTotal.toStringAsFixed(0)}',
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
@@ -183,11 +183,7 @@ class DashboardPage extends UI {
               )
             else
               Column(
-                children: recentFive
-                    .asMap()
-                    .entries
-                    .map((entry) => ExpenseTile(expense: entry.value))
-                    .toList(),
+                children: recentFive.map(ExpenseTile.new).toList(),
               ),
           ],
         ),

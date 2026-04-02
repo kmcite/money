@@ -1,6 +1,7 @@
 import 'package:money/expenses/expense_model.dart';
 import 'package:money/expenses/edit_expense_dialog.dart';
 import 'package:money/expenses/delete_expense_dialog.dart';
+import 'package:money/expenses/expenses_screen.dart';
 import 'package:money/expenses/show_expense_dialog.dart';
 import 'package:money/main.dart';
 
@@ -14,19 +15,17 @@ enum MenuAction { edit, delete }
 class ExpenseTile extends StatelessWidget {
   final Expense expense;
 
-  const ExpenseTile({super.key, required this.expense});
+  const ExpenseTile(this.expense, {super.key});
+  ExpenseTile.index(BuildContext context, int index, {super.key})
+    : expense = filteredExpenses[index];
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return ListTile(
-      leading: Icon(
-        Icons.money,
-        size: 20,
-      ),
       title: Text(
-        '₹${expense.money.toStringAsFixed(0)}',
+        '\$${expense.money.toStringAsFixed(0)}',
         style: theme.textTheme.titleMedium?.copyWith(
           fontWeight: FontWeight.w600,
           fontSize: 17,

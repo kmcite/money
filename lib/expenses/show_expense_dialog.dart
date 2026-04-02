@@ -43,7 +43,7 @@ class ShowExpenseDialog extends UI {
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
-              '₹${expense.money.toStringAsFixed(0)}',
+              '\$${expense.money.toStringAsFixed(0)}',
               style: theme.textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.w600,
                 fontSize: 24,

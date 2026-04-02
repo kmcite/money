@@ -81,11 +81,13 @@ class ExpensesScreen extends UI {
             icon: Icon(Icons.add),
           ),
           PopupMenuButton(
-            icon: Icon(switch (sortBySignal()) {
-              SortOption.date => Icons.date_range,
-              SortOption.money => Icons.attach_money,
-              SortOption.note => Icons.note,
-            }),
+            icon: Icon(
+              switch (sortBySignal()) {
+                SortOption.date => Icons.date_range,
+                SortOption.money => Icons.attach_money,
+                SortOption.note => Icons.note,
+              },
+            ),
             itemBuilder: (context) => SortOption.values
                 .map(
                   (option) => PopupMenuItem(
@@ -102,7 +104,7 @@ class ExpensesScreen extends UI {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             spacing: 8,
             children: [
@@ -153,12 +155,8 @@ class ExpensesScreen extends UI {
                         ),
                       )
                     : ListView.builder(
-                        padding: const EdgeInsets.all(16),
                         itemCount: filtered.length,
-                        itemBuilder: (context, index) {
-                          final expense = filtered[index];
-                          return ExpenseTile(expense: expense);
-                        },
+                        itemBuilder: ExpenseTile.index,
                       ),
               ),
             ],

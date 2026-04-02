@@ -56,9 +56,9 @@ class EditExpenseDialog extends UI {
                   size: 20,
                 ),
                 filled: true,
-                fillColor: theme.brightness == Brightness.dark
-                    ? Colors.grey.shade700
-                    : Colors.grey.shade200,
+                // fillColor: theme.brightness == Brightness.dark
+                //     ? Colors.grey.shade700
+                //     : Colors.grey.shade200,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide.none,
@@ -81,9 +81,9 @@ class EditExpenseDialog extends UI {
                   size: 20,
                 ),
                 filled: true,
-                fillColor: theme.brightness == Brightness.dark
-                    ? Colors.grey.shade700
-                    : Colors.grey.shade200,
+                // fillColor: theme.brightness == Brightness.dark
+                //     ? Colors.grey.shade700
+                //     : Colors.grey.shade200,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide.none,
@@ -102,6 +102,15 @@ class EditExpenseDialog extends UI {
                 } catch (e) {
                   // Handle invalid input
                 }
+              },
+            ),
+            CalendarDatePicker(
+              initialDate: currentExpense.date,
+              currentDate: currentExpense.date,
+              firstDate: DateTime(1950),
+              lastDate: DateTime(2050),
+              onDateChanged: (value) {
+                expenseSignal.set(currentExpense..date = value);
               },
             ),
           ],
